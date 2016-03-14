@@ -53,7 +53,7 @@ public class QueryUI extends javax.swing.JFrame {
 
         jButton1.setText("Convert");
 
-        jButton2.setText("jButton2");
+        jButton2.setText("Save File");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
