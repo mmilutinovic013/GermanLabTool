@@ -11,3 +11,6 @@ are added. Technologies include:
 Demonstrate a stanford parser output to be used by XRenner:   ./lexparser.sh data/testsent.txt
 
 © 2016 Mark Milutinovic
+
+
+http://stackoverflow.com/questions/17450652/create-conll-file-as-output-of-stanford-parser
