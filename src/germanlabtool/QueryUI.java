@@ -14,8 +14,12 @@ public class QueryUI extends javax.swing.JFrame {
     /**
      * Creates new form QueryUI
      */
+    private QueryHandler theHandler;
     public QueryUI() {
+        theHandler = new QueryHandler();
         initComponents();
+        this.setTitle("German Lab Tool");
+        this.setResizable(false);
         this.setVisible(true);
         this.setLocationRelativeTo(null);
     }
@@ -30,54 +34,77 @@ public class QueryUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jEditorPane1 = new javax.swing.JEditorPane();
-        jLabel1 = new javax.swing.JLabel();
+        inputEditorPane = new javax.swing.JEditorPane();
+        textInputLabel = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        outputTextArea = new javax.swing.JTextArea();
+        textOutputLabel = new javax.swing.JLabel();
+        stanfordConvertButton = new javax.swing.JButton();
+        conllConvertButton = new javax.swing.JButton();
+        loadELANButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1000, 500));
 
-        jScrollPane1.setViewportView(jEditorPane1);
+        jScrollPane1.setViewportView(inputEditorPane);
 
-        jLabel1.setText("Text Input");
+        textInputLabel.setText("Text Input");
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        outputTextArea.setColumns(20);
+        outputTextArea.setRows(5);
+        jScrollPane2.setViewportView(outputTextArea);
 
-        jLabel2.setText("Text Output");
+        textOutputLabel.setText("Text Output");
 
-        jButton1.setText("Convert");
+        stanfordConvertButton.setText("Stanford Convert");
+        stanfordConvertButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                stanfordConvertButtonActionPerformed(evt);
+            }
+        });
 
-        jButton2.setText("Save File");
+        conllConvertButton.setText("CONLL Convert");
+        conllConvertButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                conllConvertButtonActionPerformed(evt);
+            }
+        });
+
+        loadELANButton.setText("Load ELAN File");
+        loadELANButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loadELANButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(25, 25, 25)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(183, 183, 183)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2)
-                        .addGap(192, 192, 192))
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(183, 183, 183)
+                                .addComponent(textInputLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(textOutputLabel)
+                                .addGap(192, 192, 192))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(76, 76, 76)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(76, 76, 76)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(142, 142, 142)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(174, 174, 174)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(loadELANButton)
+                        .addGap(113, 113, 113)
+                        .addComponent(stanfordConvertButton)
+                        .addGap(140, 140, 140)
+                        .addComponent(conllConvertButton)
+                        .addGap(117, 117, 117)))
                 .addGap(25, 25, 25))
         );
         layout.setVerticalGroup(
@@ -85,21 +112,37 @@ public class QueryUI extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(61, 61, 61)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
+                    .addComponent(textInputLabel)
+                    .addComponent(textOutputLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
                     .addComponent(jScrollPane1))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addContainerGap(41, Short.MAX_VALUE))
+                    .addComponent(conllConvertButton)
+                    .addComponent(loadELANButton)
+                    .addComponent(stanfordConvertButton))
+                .addContainerGap(42, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void loadELANButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadELANButtonActionPerformed
+        // TODO add your handling code here:
+        theHandler.loadELANFile();
+    }//GEN-LAST:event_loadELANButtonActionPerformed
+
+    private void stanfordConvertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stanfordConvertButtonActionPerformed
+        // TODO add your handling code here:
+        theHandler.convertToStanford();
+    }//GEN-LAST:event_stanfordConvertButtonActionPerformed
+
+    private void conllConvertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conllConvertButtonActionPerformed
+        // TODO add your handling code here:
+        theHandler.convertToCONLL();
+    }//GEN-LAST:event_conllConvertButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -137,13 +180,14 @@ public class QueryUI extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JEditorPane jEditorPane1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton conllConvertButton;
+    private javax.swing.JEditorPane inputEditorPane;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
+    private javax.swing.JButton loadELANButton;
+    private javax.swing.JTextArea outputTextArea;
+    private javax.swing.JButton stanfordConvertButton;
+    private javax.swing.JLabel textInputLabel;
+    private javax.swing.JLabel textOutputLabel;
     // End of variables declaration//GEN-END:variables
 }
