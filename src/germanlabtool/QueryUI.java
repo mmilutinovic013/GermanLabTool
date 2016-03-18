@@ -5,6 +5,13 @@
  */
 package germanlabtool;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
+import javax.swing.text.BadLocationException;
+
 /**
  *
  * @author markymark1346
@@ -36,12 +43,12 @@ public class QueryUI extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         inputEditorPane = new javax.swing.JEditorPane();
         textInputLabel = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        outputTextArea = new javax.swing.JTextArea();
         textOutputLabel = new javax.swing.JLabel();
         stanfordConvertButton = new javax.swing.JButton();
         conllConvertButton = new javax.swing.JButton();
         loadELANButton = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        outputEditorPane = new javax.swing.JEditorPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1000, 500));
@@ -49,10 +56,6 @@ public class QueryUI extends javax.swing.JFrame {
         jScrollPane1.setViewportView(inputEditorPane);
 
         textInputLabel.setText("Text Input");
-
-        outputTextArea.setColumns(20);
-        outputTextArea.setRows(5);
-        jScrollPane2.setViewportView(outputTextArea);
 
         textOutputLabel.setText("Text Output");
 
@@ -77,6 +80,8 @@ public class QueryUI extends javax.swing.JFrame {
             }
         });
 
+        jScrollPane3.setViewportView(outputEditorPane);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,11 +99,11 @@ public class QueryUI extends javax.swing.JFrame {
                                 .addGap(192, 192, 192))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 430, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(76, 76, 76)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(88, 88, 88)
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 428, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(198, Short.MAX_VALUE)
                         .addComponent(loadELANButton)
                         .addGap(113, 113, 113)
                         .addComponent(stanfordConvertButton)
@@ -116,8 +121,8 @@ public class QueryUI extends javax.swing.JFrame {
                     .addComponent(textOutputLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
-                    .addComponent(jScrollPane1))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 318, Short.MAX_VALUE)
+                    .addComponent(jScrollPane3))
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(conllConvertButton)
@@ -131,17 +136,57 @@ public class QueryUI extends javax.swing.JFrame {
 
     private void loadELANButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loadELANButtonActionPerformed
         // TODO add your handling code here:
-        theHandler.loadELANFile();
+        JFileChooser fileChooser;
+        fileChooser = new JFileChooser();     
+        File f = new File(System.getProperty("user.dir"));
+        fileChooser.setCurrentDirectory(f);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.showOpenDialog(this);
+        File selectedFile = fileChooser.getSelectedFile();
+        String theFileText = theHandler.loadELANFile(selectedFile);
+        System.out.println(theFileText);
+        //inputEditorPane.add(theFileText, inputEditorPane);
+        try {
+            inputEditorPane.getDocument().insertString(0, theFileText, null);
+            //inputEditorPane.getDocument().insertString(0, "ham is good", null);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(QueryUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_loadELANButtonActionPerformed
 
     private void stanfordConvertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_stanfordConvertButtonActionPerformed
-        // TODO add your handling code here:
-        theHandler.convertToStanford();
+        JFileChooser fileChooser;
+        fileChooser = new JFileChooser();     
+        File f = new File(System.getProperty("user.dir"));
+        fileChooser.setCurrentDirectory(f);
+        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        fileChooser.showOpenDialog(this);
+        File selectedFile = fileChooser.getSelectedFile();
+        String theConvertedText = "test";
+        try {
+            theConvertedText = theHandler.convertToStanford(selectedFile);
+        } catch (IOException ex) {
+            Logger.getLogger(QueryUI.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        try {
+            outputEditorPane.getDocument().insertString(0, "Done! Check Log for output!", null);
+            //outputEditorPane.getDocument().insertString(0, theConvertedText, null);
+        } catch (BadLocationException ex) {
+            Logger.getLogger(QueryUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(theConvertedText);
+
+
+
     }//GEN-LAST:event_stanfordConvertButtonActionPerformed
 
     private void conllConvertButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_conllConvertButtonActionPerformed
-        // TODO add your handling code here:
-        theHandler.convertToCONLL();
+        try {
+            // TODO add your handling code here:
+            theHandler.convertToCONLL();
+        } catch (IOException ex) {
+            Logger.getLogger(QueryUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_conllConvertButtonActionPerformed
 
     /**
@@ -183,9 +228,9 @@ public class QueryUI extends javax.swing.JFrame {
     private javax.swing.JButton conllConvertButton;
     private javax.swing.JEditorPane inputEditorPane;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton loadELANButton;
-    private javax.swing.JTextArea outputTextArea;
+    private javax.swing.JEditorPane outputEditorPane;
     private javax.swing.JButton stanfordConvertButton;
     private javax.swing.JLabel textInputLabel;
     private javax.swing.JLabel textOutputLabel;
